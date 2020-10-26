@@ -104,7 +104,7 @@ public class Nanofactory {
             Reaction reaction = reactionRepository.findReaction(chemical);
             long reactionProductAmount = reaction.getProducts().get(chemical);
             //find the amount of iterations, round that up
-            int reactionIterations = (int) Math.ceil((double) amountToProduce / reactionProductAmount);
+            long reactionIterations = (long) Math.ceil((double) amountToProduce / reactionProductAmount);
 
             reaction.getIngredients().forEach((ingredient, amountNeeded) -> {
                 amountNeeded *= reactionIterations;
