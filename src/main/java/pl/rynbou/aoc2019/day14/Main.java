@@ -18,17 +18,29 @@ public class Main {
         worker.addBaseIngredientChemical(ORE);
 
         worker.setProduct(FUEL, 1);
-        //OUTPUTS 431448, this is correct
-        System.out.println("Part 1: " + worker.calculateIngredientsAmount().getOrDefault(ORE, 0L));
+        long part1 = worker.calculateIngredientsAmount().getOrDefault(ORE, 0L);
+        System.out.println("Part 1: " + part1);
+
+        System.out.println("Part 2: " + part2(worker, FUEL, ORE, 1000000000000L, part1));
+    }
+
+    public static long part2(Nanofactory.Worker worker, Chemical fuel, Chemical ore, long target, long perOne) {
+        return part2(worker, fuel, ore, target, target / perOne, (target / perOne) * 2);
+    }
+
+    public static long part2(Nanofactory.Worker worker, Chemical fuel, Chemical ore, long target, long min, long max) {
+        long mid = (min + max) / 2;
 
         worker.reset();
-        worker.setProduct(FUEL, 2477865);
-        //OUTPUTS 755605291766, this is correct
-        System.out.println("Test: " + worker.calculateIngredientsAmount().getOrDefault(ORE, 0L));
+        worker.setProduct(fuel, mid);
+        long producedOre = worker.calculateIngredientsAmount().getOrDefault(ore, 0L);
 
-        worker.reset();
-        worker.setProduct(FUEL, 2477866);
-        //hangs, gets stuck in an infinite loop
-        System.out.println("Test: " + worker.calculateIngredientsAmount().getOrDefault(ORE, 0L));
+        if (max - min <= 1  || producedOre == target) {
+            return mid;
+        } else if (producedOre < target) {
+            return part2(worker, fuel, ore, target, mid, max);
+        } else {
+            return part2(worker, fuel, ore, target, min, mid);
+        }
     }
 }
